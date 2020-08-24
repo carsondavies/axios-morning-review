@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import axios from 'axios'
+import Form from './Form'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const baseURL = 'https://joes-autos.herokuapp.com/api/vehicles'
+export default class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      vehicles: []
+    }
+    this.addVehicle = this.addVehicle.bind(this)
+  }
+
+  componentDidMount() {
+    axios.get(`${baseURL}`)
+      .then(res => {
+        console.log(res)
+        this.setState({
+          vehicles: res.data
+        })
+      })
+      .catch(err => {
+        alert(err)
+      })
+  }
+
+  addVehicle(newCar) {
+    axios.post(`${baseURL}`, newCar)
+      .then(res => {
+        this.setState({
+          vehicles: res.data
+        })
+      })
+      .catch(err => {
+        alert(err)
+      })
+  }
+
+
+  render() {
+    console.log(this.state)
+    return (
+      <div>
+        This is App.js
+        <Form addVehicle={this.addVehicle} />
+      </div>
+    )
+  }
 }
-
-export default App;
